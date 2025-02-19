@@ -14,6 +14,12 @@ let mode = "all";
 let filterList = [];
 
 addButton.addEventListener("click", addTask);
+taskInput.addEventListener("keypress", function (event) {
+  if (event.key === "Enter") {
+    addTask();
+  }
+  render();
+});
 
 for (let i = 0; i < tabs.length; i++) {
   tabs[i].addEventListener("click", function (event) {
@@ -45,17 +51,17 @@ function render() {
     if (list[i].isComplete == true) {
       resultHTML += `<div class="task">
             <div class="task-done">${list[i].taskContent}</div>
-            <div>
-              <button onclick="toggleComplete('${list[i].id}')">완료</button>
-              <button onclick="deleteTask('${list[i].id}')">삭제</button>
+            <div class="btn-eara">
+              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
+              <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>`;
     } else {
       resultHTML += `<div class="task">
             <div>${list[i].taskContent}</div>
-            <div>
-              <button onclick="toggleComplete('${list[i].id}')">완료</button>
-              <button onclick="deleteTask('${list[i].id}')">삭제</button>
+            <div class="btn-eara">
+              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
+              <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>`;
     }
@@ -78,6 +84,13 @@ function deleteTask(id) {
   for (let i = 0; i < taskList.length; i++) {
     if (taskList[i].id == id) {
       taskList.splice(i, 1);
+      break;
+    }
+  }
+
+  for (let i = 0; i < filterList.length; i++) {
+    if (filterList[i].id == id) {
+      filterList.splice(i, 1);
       break;
     }
   }
