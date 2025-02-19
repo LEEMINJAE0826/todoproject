@@ -53,27 +53,34 @@ body {
 
 .task {
   display: flex;
-  /* width: 100%; */
   justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  position: relative;
+  /* padding: 1em; */
   align-items: center;
-  gap: 24px;
+  height: 48px;
+}
+
+span {
   padding: 1em;
 }
 
-.task div {
+.btn-erea {
   display: flex;
-  align-items: center;
-  flex: 1 0 0;
-  align-self: stretch;
-}
-
-.btn-area {
-  width: 420px;
+  padding: 0;
 }
 
 .task-done {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-bottom: 1px solid lightgray;
+  position: relative;
   text-decoration: line-through;
   background-color: #e1e1e1;
+  align-items: center;
+  height: 48px;
 }
 
 button {
@@ -81,14 +88,56 @@ button {
   border: none;
   outline: none;
   box-shadow: none;
+  padding: 0;
 }
 
-i {
+.fa-plus {
+    background-color: rgb(145, 212, 81);
+    border: none;
+    color: white;
+    padding: 1em 2em;
+    font-size: 1em;
+    cursor: pointer;
+    
+    /* border-radius: 10px; */
+  }
+
+.fa-check {
   background-color: DodgerBlue;
   border: none;
   color: white;
-  padding: 14px 16px;
-  font-size: 16px;
+  padding: 1em 2em;
+  font-size: 1em;
   cursor: pointer;
-  border-radius: 4px;
+  width: 5em;
+  /* border-radius: 10px; */
 }
+
+.fa-trash {
+  background-color: rgb(255, 94, 30);
+  border: none;
+  color: white;
+  padding: 1em 2em;
+  font-size: 1em;
+  cursor: pointer;
+  width: 5em;
+  /* border-radius: 10px; */
+}
+
+.fa-rotate-left {
+    background-color: rgb(12, 56, 100);
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 1em 2em;
+    font-size: 1em;
+    cursor: pointer;
+    width: 5em;
+    /* border-radius: 10px; */
+  }
+
+
+    .active-tab {
+      background-color: rgb(145, 212, 81);
+      font-weight: 600;
+      color: #fff;
+    }

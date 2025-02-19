@@ -13,10 +13,13 @@ let taskList = [];
 let mode = "all";
 let filterList = [];
 
+document.getElementById("all").classList.add("active-tab");
+
 addButton.addEventListener("click", addTask);
 taskInput.addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
     addTask();
+    taskInput.value = "";
   }
   render();
 });
@@ -49,17 +52,17 @@ function render() {
   let = resultHTML = "";
   for (let i = 0; i < list.length; i++) {
     if (list[i].isComplete == true) {
-      resultHTML += `<div class="task">
-            <div class="task-done">${list[i].taskContent}</div>
-            <div class="btn-eara">
-              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
+      resultHTML += `<div class="task-done">
+            <span>${list[i].taskContent}</span>
+            <div class="btn-erea">
+              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-rotate-left"></i></button>
               <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>`;
     } else {
       resultHTML += `<div class="task">
-            <div>${list[i].taskContent}</div>
-            <div class="btn-eara">
+            <div><span>${list[i].taskContent}</span></div>
+            <div class="btn-erea">
               <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
               <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
             </div>
@@ -98,6 +101,10 @@ function deleteTask(id) {
 }
 
 function filter(event) {
+  //탭 활성화 비활성화 관련 부분
+  tabs.forEach((tab) => tab.classList.remove("active-tab"));
+  event.target.classList.add("active-tab");
+
   mode = event.target.id;
   filterList = [];
   if (mode === "all") {
