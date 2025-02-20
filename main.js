@@ -9,9 +9,9 @@
 let taskInput = document.getElementById("task-input");
 let addButton = document.getElementById("add-button");
 let tabs = document.querySelectorAll(".task-tabs div");
+let taskBoard = document.getElementById("task-board");
 let taskList = [];
 let mode = "all";
-let filterList = [];
 
 document.getElementById("all").classList.add("active-tab");
 
@@ -19,85 +19,81 @@ addButton.addEventListener("click", addTask);
 taskInput.addEventListener("keypress", function (event) {
   if (event.key === "Enter") {
     addTask();
-    taskInput.value = "";
   }
-  render();
 });
 
-for (let i = 0; i < tabs.length; i++) {
-  tabs[i].addEventListener("click", function (event) {
-    filter(event);
+tabs.forEach((tab) => {
+  tab.addEventListener("click", function (event) {
+    changeMode(event.target.id);
   });
-}
+});
 
 function addTask() {
+  let taskValue = taskInput.value.trim();
+  if (taskValue === "") return alert("할 일을 입력해주세요.");
+
   let task = {
     id: randomIDGenerate(),
-    taskContent: taskInput.value,
+    taskContent: taskValue,
     isComplete: false,
   };
   taskList.push(task);
-  console.log(taskList);
+  taskInput.value = "";
   render();
 }
 
 function render() {
-  let list = [];
-  if (mode === "all") {
-    list = taskList;
-  } else if (mode === "ongoing" || mode === "done") {
-    list = filterList;
-  }
+  let resultHTML = "";
+  let filteredList = getFilteredList();
 
-  let = resultHTML = "";
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].isComplete == true) {
-      resultHTML += `<div class="task-done">
-            <span>${list[i].taskContent}</span>
-            <div class="btn-erea">
-              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-rotate-left"></i></button>
-              <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>`;
-    } else {
-      resultHTML += `<div class="task">
-            <div><span>${list[i].taskContent}</span></div>
-            <div class="btn-erea">
-              <button onclick="toggleComplete('${list[i].id}')"><i class="fa-solid fa-check"></i></button>
-              <button onclick="deleteTask('${list[i].id}')"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>`;
-    }
-  }
+  filteredList.forEach((task) => {
+    resultHTML += `<div class="task ${task.isComplete ? "task-done" : ""}">
+      <span>${task.taskContent}</span>
+      <div class="btn-area">
+        <button onclick="toggleComplete('${task.id}')">
+          <i class="fa-solid ${
+            task.isComplete ? "fa-rotate-left" : "fa-check"
+          }"></i>
+        </button>
+        <button onclick="deleteTask('${task.id}')">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>`;
+  });
 
-  document.getElementById("task-board").innerHTML = resultHTML;
+  taskBoard.innerHTML = resultHTML;
 }
 
 function toggleComplete(id) {
-  for (let i = 0; i < taskList.length; i++) {
-    if (taskList[i].id == id) {
-      taskList[i].isComplete = !taskList[i].isComplete;
-      break;
-    }
+  let task = taskList.find((task) => task.id === id);
+  if (task) {
+    task.isComplete = !task.isComplete;
   }
   render();
 }
 
 function deleteTask(id) {
-  for (let i = 0; i < taskList.length; i++) {
-    if (taskList[i].id == id) {
-      taskList.splice(i, 1);
-      break;
-    }
-  }
-
-  for (let i = 0; i < filterList.length; i++) {
-    if (filterList[i].id == id) {
-      filterList.splice(i, 1);
-      break;
-    }
-  }
+  taskList = taskList.filter((task) => task.id !== id);
   render();
+}
+
+function changeMode(selectedMode) {
+  mode = selectedMode;
+  tabs.forEach((tab) => tab.classList.remove("active-tab"));
+  document.getElementById(selectedMode).classList.add("active-tab");
+  render();
+}
+
+function getFilteredList() {
+  if (mode === "all") return taskList;
+  return taskList.filter((task) =>
+    mode === "done" ? task.isComplete : !task.isComplete
+  );
+}
+
+function randomIDGenerate() {
+  return "_" + Math.random().toString(36).substr(2, 9);
 }
 
 function filter(event) {
@@ -105,25 +101,27 @@ function filter(event) {
   tabs.forEach((tab) => tab.classList.remove("active-tab"));
   event.target.classList.add("active-tab");
 
-  mode = event.target.id;
+  if (event) {
+    mode = event.target.id;
+  }
+
   filterList = [];
-  if (mode === "all") {
-    render();
-  } else if (mode === "ongoing") {
+  // if (mode === "all") {
+  //   render()};
+  if (mode === "ongoing") {
     for (let i = 0; i < taskList.length; i++) {
       if (taskList[i].isComplete === false) {
         filterList.push(taskList[i]);
       }
     }
-    render();
   } else if (mode === "done") {
     for (let i = 0; i < taskList.length; i++) {
       if (taskList[i].isComplete === true) {
         filterList.push(taskList[i]);
       }
     }
-    render();
   }
+  render();
 }
 
 function randomIDGenerate() {
